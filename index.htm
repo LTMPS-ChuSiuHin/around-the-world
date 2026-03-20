@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文 X 數學 主題活動日：Around the World</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #2980b9; /* 地球藍 - 學生 */
+            --secondary-color: #f39c12; /* 探索金 */
+            --accent-color: #f1c40f; /* 亮黃 */
+            --teacher-color: #27ae60; /* 森林綠 - 教師 */
+            --bg-color: #f4f9f9; /* 淺藍白背景 */
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#d5e8e8 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-color);
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        /* 標題區塊 */
+        .header-banner {
+            background: linear-gradient(135deg, #1abc9c, #2980b9);
+            position: relative;
+            padding: 50px 20px 80px;
+            margin-bottom: -40px;
+            border-radius: 0 0 50% 50% / 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .header-title {
+            font-family: "標楷體", "BiauKai", "KaiTi", "DFKai-SB", serif;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px var(--accent-color);
+            letter-spacing: 2px;
+            line-height: 1.3;
+        }
+
+        .header-subtitle {
+            font-family: 'Noto Sans TC', sans-serif;
+            letter-spacing: 1px;
+            color: #f1c40f;
+            font-weight: bold;
+        }
+
+        /* 內頁專用樣式 */
+        .inner-view {
+            padding-top: 60px; 
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 卡片特效 */
+        .section-card {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), #3498db);
+        }
+
+        .teacher-card::before { background: linear-gradient(to bottom, var(--teacher-color), #2ecc71); }
+
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.5;
+        }
+        
+        /* 輸入框與按鈕 */
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid #eee;
+            padding: 12px 15px;
+            background-color: #fdfdfd;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.2);
+        }
+
+        .btn-custom {
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, var(--primary-color), #3498db);
+            color: white;
+        }
+        
+        .btn-success-custom {
+            background: linear-gradient(45deg, var(--secondary-color), #e67e22);
+            color: white;
+        }
+
+        .btn-teacher-custom {
+            background: linear-gradient(45deg, var(--teacher-color), #2ecc71);
+            color: white;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            color: white;
+        }
+
+        /* 進度條特效 */
+        .progress {
+            height: 30px;
+            border-radius: 15px;
+            background-color: #e9ecef;
+            margin-bottom: 10px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            font-size: 0.85rem;
+        }
+        
+        .progress-bar {
+            line-height: 30px;
+            font-weight: bold;
+            transition: width 1.5s ease-in-out; 
+        }
+
+        /* 動畫類別 */
+        .hidden { display: none !important; }
+        .animate-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* 班級狀況網格 */
+        .class-grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; text-align: center; }
+        .class-status-badge { padding: 10px 5px; border-radius: 8px; font-weight: bold; background-color: #f1f1f1; color: #999; border: 1px solid #ddd; }
+        .class-status-badge.done { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+        
+        .stat-detail-badge { font-size: 0.9em; padding: 5px 10px; border-radius: 8px; background: #f8f9fa; border: 1px solid #eee; margin-bottom: 5px; display: inline-block; }
+
+        /* 角色選單卡片 */
+        .role-card { text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: default; }
+        .role-icon { font-size: 3.5rem; margin-bottom: 1rem; color: var(--text-color); }
+
+        /* 自定義 Radio Button 樣式 */
+        .custom-radio-group .btn-check:checked + .btn { background-color: #6c757d; color: white; border-color: #6c757d; }
+        .teacher-radio .btn-check:checked + .btn { background-color: var(--teacher-color); border-color: var(--teacher-color); }
+        .custom-radio-group .btn { border: 1px solid #ced4da; color: #6c757d; }
+    </style>
+</head>
+<body>
+
+    <div class="header-banner text-center">
+        <h1 class="display-4 fw-bold header-title mb-2"><i class="bi bi-globe-americas me-2"></i>英文 X 數學 主題活動日</h1>
+        <h2 class="header-subtitle fs-3 mb-3">Around the World</h2>
+        <p class="text-white opacity-75 fs-6 mb-0">電子問卷統計系統</p>
+    </div>
+
+    <div class="container" style="max-width: 900px; margin-top: 20px;">
+        
+        <div id="main-menu" class="py-4">
+            <div class="row g-4 justify-content-center">
+                
+                <div class="col-md-5 animate-up" style="animation-delay: 0.1s">
+                    <div class="section-card role-card">
+                        <i class="bi bi-mortarboard-fill role-icon" style="color: var(--primary-color);"></i>
+                        <h3 class="fw-bold mb-4">學生問卷</h3>
+                        <div class="d-grid gap-2 w-100">
+                            <button class="btn btn-primary-custom btn-custom btn-lg" onclick="showForm('student')">
+                                <i class="bi bi-pencil-square me-2"></i>填寫問卷
+                            </button>
+                            <button class="btn btn-success-custom btn-custom btn-lg" onclick="loadStats('student')">
+                                <i class="bi bi-bar-chart-fill me-2"></i>查看結果
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5 animate-up" style="animation-delay: 0.2s">
+                    <div class="section-card role-card teacher-card">
+                        <i class="bi bi-person-workspace role-icon" style="color: var(--teacher-color);"></i>
+                        <h3 class="fw-bold mb-4">教師問卷</h3>
+                        <div class="d-grid gap-2 w-100">
+                            <button class="btn btn-teacher-custom btn-custom btn-lg" onclick="showForm('teacher')">
+                                <i class="bi bi-pencil-square me-2"></i>填寫問卷
+                            </button>
+                            <button class="btn btn-success-custom btn-custom btn-lg" onclick="loadStats('teacher')">
+                                <i class="bi bi-bar-chart-fill me-2"></i>查看結果
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="student-form-view" class="hidden inner-view">
+            <div class="d-flex justify-content-between align-items-center mb-4 animate-up">
+                <button class="btn btn-light rounded-pill shadow-sm text-secondary px-3" onclick="resetView()"><i class="bi bi-arrow-left me-1"></i> 返回</button>
+                <h4 class="fw-bold m-0 text-secondary">學生問卷輸入</h4>
+                <div style="width: 80px;"></div>
+            </div>
+            <form id="studentSurveyForm">
+                <div class="section-card animate-up delay-1">
+                    <h5 class="section-title"><i class="bi bi-person-badge"></i>基本資料</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">級別 (P.1-6)</label>
+                            <select class="form-select" id="grade" required>
+                                <option value="" selected disabled>請選擇級別</option>
+                                <option value="1">P.1</option>
+                                <option value="2">P.2</option>
+                                <option value="3">P.3</option>
+                                <option value="4">P.4</option>
+                                <option value="5">P.5</option>
+                                <option value="6">P.6</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">班別 (A-E)</label>
+                            <select class="form-select" id="class" required>
+                                <option value="" selected disabled>請選擇班別</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">作答問卷人數</label>
+                            <input type="number" class="form-control" id="totalCount" min="1" placeholder="例如: 30" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card animate-up delay-2">
+                    <h5 class="section-title"><i class="bi bi-1-circle-fill"></i>1. 你認同在主題活動中能認識不同國家的文化、地標與風俗。</h5>
+                    <div class="row g-3">
+                        <div class="col-4 text-center"><label class="form-label text-success fw-bold">認同</label><input type="number" class="form-control data-input text-center fs-5" data-group="q1" data-field="agree" min="0"></div>
+                        <div class="col-4 text-center"><label class="form-label text-warning fw-bold" style="color: #f39c12!important;">中立</label><input type="number" class="form-control data-input text-center fs-5" data-group="q1" data-field="neutral" min="0"></div>
+                        <div class="col-4 text-center"><label class="form-label text-danger fw-bold">不認同</label><input type="number" class="form-control data-input text-center fs-5" data-group="q1" data-field="disagree" min="0"></div>
+                    </div>
+                </div>
+
+                <div class="section-card animate-up delay-3">
+                    <h5 class="section-title"><i class="bi bi-2-circle-fill"></i>2. 你認同主題活動能提升你的閱讀能力、協作能力及解難能力。</h5>
+                    <div class="row g-3">
+                        <div class="col-4 text-center"><label class="form-label text-success fw-bold">認同</label><input type="number" class="form-control data-input text-center fs-5" data-group="q2" data-field="agree" min="0"></div>
+                        <div class="col-4 text-center"><label class="form-label text-warning fw-bold" style="color: #f39c12!important;">中立</label><input type="number" class="form-control data-input text-center fs-5" data-group="q2" data-field="neutral" min="0"></div>
+                        <div class="col-4 text-center"><label class="form-label text-danger fw-bold">不認同</label><input type="number" class="form-control data-input text-center fs-5" data-group="q2" data-field="disagree" min="0"></div>
+                    </div>
+                </div>
+
+                <div class="section-card animate-up delay-2">
+                    <h5 class="section-title"><i class="bi bi-3-circle-fill"></i>3. 英數活動日讓你有機會從閱讀中學習。（例如閱讀Around the World小冊子、書展圖書、活動場地展板及圖書、地下操場的地圖等）</h5>
+                    <div class="row g-3">
+                        <div class="col-4 text-center"><label class="form-label text-success fw-bold">認同</label><input type="number" class="form-control data-input text-center fs-5" data-group="q3" data-field="agree" min="0"></div>
+                        <div class="col-4 text-center"><label class="form-label text-warning fw-bold" style="color: #f39c12!important;">中立</label><input type="number" class="form-control data-input text-center fs-5" data-group="q3" data-field="neutral" min="0"></div>
+                        <div class="col-4 text-center"><label class="form-label text-danger fw-bold">不認同</label><input type="number" class="form-control data-input text-center fs-5" data-group="q3" data-field="disagree" min="0"></div>
+                    </div>
+                </div>
+
+                <div class="section-card animate-up delay-3">
+                    <h5 class="section-title"><i class="bi bi-4-circle-fill"></i>4. 你最喜歡哪一個活動？</h5>
+                    <p class="text-muted small mb-3">請輸入各項活動的投票人數</p>
+                    <div class="d-flex flex-column gap-3">
+                        <div class="row align-items-center"><label class="col-sm-8 col-form-label fw-medium fs-5">🎪 攤位遊戲</label><div class="col-sm-4"><input type="number" class="form-control data-input" data-group="q4" data-field="booth" min="0" placeholder="人數"></div></div>
+                        <div class="row align-items-center"><label class="col-sm-8 col-form-label fw-medium fs-5">🏃 競技</label><div class="col-sm-4"><input type="number" class="form-control data-input" data-group="q4" data-field="race" min="0" placeholder="人數"></div></div>
+                        <div class="row align-items-center"><label class="col-sm-8 col-form-label fw-medium fs-5">🎨 手工</label><div class="col-sm-4"><input type="number" class="form-control data-input" data-group="q4" data-field="craft" min="0" placeholder="人數"></div></div>
+                        <div class="row align-items-center"><label class="col-sm-8 col-form-label fw-medium fs-5">📮 反思任務(明信片)</label><div class="col-sm-4"><input type="number" class="form-control data-input" data-group="q4" data-field="postcard" min="0" placeholder="人數"></div></div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-3 mb-5 animate-up delay-3">
+                    <button type="submit" class="btn btn-primary-custom btn-lg shadow-lg">提交學生數據</button>
+                    <button type="button" class="btn btn-light btn-lg text-secondary" onclick="resetView()">取消</button>
+                </div>
+            </form>
+        </div>
+        
+        <div id="student-stats-view" class="hidden inner-view">
+            <div class="d-flex justify-content-between align-items-center mb-4 animate-up">
+                <h3 class="fw-bold" style="color: var(--primary-color);">學生問卷統計結果</h3>
+                <button class="btn btn-outline-secondary btn-sm rounded-pill" onclick="resetView()">返回</button>
+            </div>
+            <div id="student-stats-content"></div>
+            <div class="text-center mt-5 mb-5 animate-up"><button class="btn btn-secondary rounded-pill px-4 shadow-sm" onclick="resetView()">返回主選單</button></div>
+        </div>
+
+
+        <div id="teacher-form-view" class="hidden inner-view">
+            <div class="d-flex justify-content-between align-items-center mb-4 animate-up">
+                <button class="btn btn-light rounded-pill shadow-sm text-secondary px-3" onclick="resetView()"><i class="bi bi-arrow-left me-1"></i> 返回</button>
+                <h4 class="fw-bold m-0" style="color: var(--teacher-color);">教師問卷</h4>
+                <div style="width: 80px;"></div>
+            </div>
+
+            <form id="teacherSurveyForm">
+                <div class="section-card teacher-card animate-up delay-1">
+                    <h5 class="section-title" style="color: var(--teacher-color);"><i class="bi bi-person-badge"></i>基本資料</h5>
+                    <div class="mb-3">
+                        <label class="form-label">教師編號 (0-99)</label>
+                        <input type="number" class="form-control" id="teacherId" min="0" max="99" placeholder="請輸入編號" required style="max-width: 200px;">
+                    </div>
+                </div>
+
+                <div class="section-card teacher-card animate-up delay-2">
+                    <h5 class="section-title" style="color: var(--teacher-color);">1. 學生積極投入今天的活動。</h5>
+                    <div class="btn-group w-100 custom-radio-group teacher-radio" role="group">
+                        <input type="radio" class="btn-check" name="t_q1" id="t_q1_agree" value="agree" required>
+                        <label class="btn btn-outline-secondary" for="t_q1_agree">同意</label>
+                        <input type="radio" class="btn-check" name="t_q1" id="t_q1_neutral" value="neutral">
+                        <label class="btn btn-outline-secondary" for="t_q1_neutral">中立</label>
+                        <input type="radio" class="btn-check" name="t_q1" id="t_q1_disagree" value="disagree">
+                        <label class="btn btn-outline-secondary" for="t_q1_disagree">不同意</label>
+                    </div>
+                </div>
+
+                <div class="section-card teacher-card animate-up delay-2">
+                    <h5 class="section-title" style="color: var(--teacher-color);">2. 學生能應用所學在活動中完成任務。</h5>
+                    <div class="btn-group w-100 custom-radio-group teacher-radio" role="group">
+                        <input type="radio" class="btn-check" name="t_q2" id="t_q2_agree" value="agree" required>
+                        <label class="btn btn-outline-secondary" for="t_q2_agree">同意</label>
+                        <input type="radio" class="btn-check" name="t_q2" id="t_q2_neutral" value="neutral">
+                        <label class="btn btn-outline-secondary" for="t_q2_neutral">中立</label>
+                        <input type="radio" class="btn-check" name="t_q2" id="t_q2_disagree" value="disagree">
+                        <label class="btn btn-outline-secondary" for="t_q2_disagree">不同意</label>
+                    </div>
+                </div>
+
+                <div class="section-card teacher-card animate-up delay-3">
+                    <h5 class="section-title" style="color: var(--teacher-color);">3. 透過今天的活動，學生對不同國家文化、地標與風俗加深了認識。</h5>
+                    <div class="btn-group w-100 custom-radio-group teacher-radio" role="group">
+                        <input type="radio" class="btn-check" name="t_q3" id="t_q3_agree" value="agree" required>
+                        <label class="btn btn-outline-secondary" for="t_q3_agree">同意</label>
+                        <input type="radio" class="btn-check" name="t_q3" id="t_q3_neutral" value="neutral">
+                        <label class="btn btn-outline-secondary" for="t_q3_neutral">中立</label>
+                        <input type="radio" class="btn-check" name="t_q3" id="t_q3_disagree" value="disagree">
+                        <label class="btn btn-outline-secondary" for="t_q3_disagree">不同意</label>
+                    </div>
+                </div>
+
+                <div class="section-card teacher-card animate-up delay-3">
+                    <h5 class="section-title" style="color: var(--teacher-color);">4. 學生能在活動中發揮協作及解難能力。</h5>
+                    <div class="btn-group w-100 custom-radio-group teacher-radio" role="group">
+                        <input type="radio" class="btn-check" name="t_q4" id="t_q4_agree" value="agree" required>
+                        <label class="btn btn-outline-secondary" for="t_q4_agree">同意</label>
+                        <input type="radio" class="btn-check" name="t_q4" id="t_q4_neutral" value="neutral">
+                        <label class="btn btn-outline-secondary" for="t_q4_neutral">中立</label>
+                        <input type="radio" class="btn-check" name="t_q4" id="t_q4_disagree" value="disagree">
+                        <label class="btn btn-outline-secondary" for="t_q4_disagree">不同意</label>
+                    </div>
+                </div>
+
+                <div class="section-card teacher-card animate-up delay-2">
+                    <h5 class="section-title" style="color: var(--teacher-color);">5. 英數活動日讓學生有機會閱讀不同的閱讀材料。（例如Around the World小冊子、書展圖書、活動場地展板及圖書、地下操場的地圖等）</h5>
+                    <div class="btn-group w-100 custom-radio-group teacher-radio" role="group">
+                        <input type="radio" class="btn-check" name="t_q5" id="t_q5_agree" value="agree" required>
+                        <label class="btn btn-outline-secondary" for="t_q5_agree">認同</label>
+                        <input type="radio" class="btn-check" name="t_q5" id="t_q5_neutral" value="neutral">
+                        <label class="btn btn-outline-secondary" for="t_q5_neutral">中立</label>
+                        <input type="radio" class="btn-check" name="t_q5" id="t_q5_disagree" value="disagree">
+                        <label class="btn btn-outline-secondary" for="t_q5_disagree">不認同</label>
+                    </div>
+                </div>
+
+                <div class="section-card teacher-card animate-up delay-3">
+                    <h5 class="section-title" style="color: var(--teacher-color);">6. 其他意見</h5>
+                    <textarea class="form-control" id="t_q6" rows="4" placeholder="請輸入文字"></textarea>
+                </div>
+
+                <div class="d-grid gap-3 mb-5 animate-up delay-3">
+                    <button type="submit" class="btn btn-teacher-custom btn-lg shadow-lg">提交教師問卷</button>
+                    <button type="button" class="btn btn-light btn-lg text-secondary" onclick="resetView()">取消</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="teacher-stats-view" class="hidden inner-view">
+            <div class="d-flex justify-content-between align-items-center mb-4 animate-up">
+                <h3 class="fw-bold" style="color: var(--teacher-color);">教師問卷統計結果</h3>
+                <button class="btn btn-outline-secondary btn-sm rounded-pill" onclick="resetView()">返回</button>
+            </div>
+            <div id="teacher-stats-content"></div>
+            <div class="text-center mt-5 mb-5 animate-up"><button class="btn btn-secondary rounded-pill px-4 shadow-sm" onclick="resetView()">返回主選單</button></div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="modal-body text-center p-5">
+                    <div class="mb-3"><i class="bi bi-check-circle-fill text-success display-1"></i></div>
+                    <h3 class="fw-bold text-dark mb-3">上載成功！</h3>
+                    <p class="text-muted">數據已安全儲存至資料庫。</p>
+                    <button type="button" class="btn btn-primary-custom rounded-pill px-5 mt-3" data-bs-dismiss="modal" onclick="window.resetView()">好的</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="confetti-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; display:none;"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrnUJbEIw4zyYg2B7zSHk6O1_Pka077uM",
+            authDomain: "art-festival2026.firebaseapp.com",
+            projectId: "art-festival2026",
+            storageBucket: "art-festival2026.firebasestorage.app",
+            messagingSenderId: "588461231876",
+            appId: "1:588461231876:web:5e743a19ebbfa84cbbca51"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const modal = new bootstrap.Modal(document.getElementById('successModal'));
+
+        // 新活動的 Collection 名稱，避免與舊數據混淆
+        const STUDENT_COLLECTION = "surveys_student_aw26";
+        const TEACHER_COLLECTION = "surveys_teacher_aw26";
+
+        // ================= UI Navigation Logic =================
+        window.resetView = function() {
+            const views = document.querySelectorAll('.inner-view');
+            views.forEach(v => v.classList.add('hidden'));
+            document.getElementById('main-menu').classList.remove('hidden');
+            const menu = document.getElementById('main-menu');
+            menu.querySelectorAll('.animate-up').forEach(el => {
+                el.style.animation = 'none';
+                el.offsetHeight; 
+                el.style.animation = '';
+            });
+            window.scrollTo(0, 0);
+        }
+
+        window.showForm = function(type) {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('student-form-view').classList.add('hidden');
+            document.getElementById('teacher-form-view').classList.add('hidden');
+
+            document.getElementById(`${type}-form-view`).classList.remove('hidden');
+
+            if(type === 'student') {
+                document.getElementById('studentSurveyForm').reset();
+            } else if (type === 'teacher') {
+                document.getElementById('teacherSurveyForm').reset();
+            }
+            window.scrollTo(0, 0);
+        }
+
+        window.loadStats = function(type) {
+            // 密碼驗證
+            const pwd = prompt("請輸入密碼以查看統計結果：");
+            if (pwd !== "kit") {
+                alert("密碼錯誤，拒絕存取。");
+                return;
+            }
+
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('student-stats-view').classList.add('hidden');
+            document.getElementById('teacher-stats-view').classList.add('hidden');
+
+            document.getElementById(`${type}-stats-view`).classList.remove('hidden');
+
+            if (type === 'student') loadStudentStats();
+            else if (type === 'teacher') loadTeacherStats();
+            
+            window.scrollTo(0, 0);
+        }
+
+        // ================= Student Logic =================
+        document.getElementById('studentSurveyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '處理中...';
+
+            const formData = {
+                grade: document.getElementById('grade').value,
+                class: document.getElementById('class').value,
+                totalCount: parseInt(document.getElementById('totalCount').value) || 0,
+                timestamp: new Date(),
+                data: {}
+            };
+            e.target.querySelectorAll('.data-input').forEach(input => {
+                const group = input.dataset.group;
+                const field = input.dataset.field;
+                const val = parseInt(input.value) || 0;
+                if (!formData.data[group]) formData.data[group] = {};
+                formData.data[group][field] = val;
+            });
+
+            try {
+                await addDoc(collection(db, STUDENT_COLLECTION), formData);
+                triggerConfetti();
+                modal.show();
+            } catch (error) {
+                console.error(error);
+                alert("上載失敗，請檢查網絡。");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+
+        // ================= Teacher Logic =================
+        document.getElementById('teacherSurveyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '處理中...';
+
+            const getRadioVal = (name) => {
+                const el = document.querySelector(`input[name="${name}"]:checked`);
+                return el ? el.value : null;
+            };
+
+            const formData = {
+                teacherId: document.getElementById('teacherId').value,
+                q1: getRadioVal('t_q1'),
+                q2: getRadioVal('t_q2'),
+                q3: getRadioVal('t_q3'),
+                q4: getRadioVal('t_q4'),
+                q5: getRadioVal('t_q5'),
+                q6: document.getElementById('t_q6').value,
+                timestamp: new Date()
+            };
+
+            try {
+                await addDoc(collection(db, TEACHER_COLLECTION), formData);
+                triggerConfetti();
+                modal.show();
+            } catch (error) {
+                console.error(error);
+                alert("上載失敗，請檢查網絡。");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+
+        // ================= Teacher Stats =================
+        async function loadTeacherStats() {
+            const contentDiv = document.getElementById('teacher-stats-content');
+            contentDiv.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-success"></div><p class="mt-2 text-muted">正在連線資料庫...</p></div>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, TEACHER_COLLECTION));
+                const latestSurveys = {}; 
+                querySnapshot.forEach((doc) => {
+                    const d = doc.data();
+                    const key = d.teacherId;
+                    const docTime = d.timestamp ? (d.timestamp.seconds * 1000) : 0;
+                    if (!latestSurveys[key] || docTime > latestSurveys[key].docTime) {
+                        latestSurveys[key] = { ...d, docTime: docTime };
+                    }
+                });
+                
+                const filteredData = Object.values(latestSurveys);
+                const totalRespondents = filteredData.length;
+
+                if (totalRespondents === 0) {
+                    contentDiv.innerHTML = '<div class="alert alert-info text-center shadow-sm">目前資料庫中暫無教師數據。</div>';
+                    return;
+                }
+
+                let stats = {
+                    q1: { agree: 0, neutral: 0, disagree: 0, label: "1. 學生積極投入今天的活動。", labelA: "同意", labelN: "中立", labelD: "不同意" },
+                    q2: { agree: 0, neutral: 0, disagree: 0, label: "2. 學生能應用所學在活動中完成任務。", labelA: "同意", labelN: "中立", labelD: "不同意" },
+                    q3: { agree: 0, neutral: 0, disagree: 0, label: "3. 透過今天的活動，學生對不同國家文化、地標與風俗加深了認識。", labelA: "同意", labelN: "中立", labelD: "不同意" },
+                    q4: { agree: 0, neutral: 0, disagree: 0, label: "4. 學生能在活動中發揮協作及解難能力。", labelA: "同意", labelN: "中立", labelD: "不同意" },
+                    q5: { agree: 0, neutral: 0, disagree: 0, label: "5. 英數活動日讓學生有機會閱讀不同的閱讀材料。（例如Around the World小冊子、書展圖書、活動場地展板及圖書、地下操場的地圖等）", labelA: "認同", labelN: "中立", labelD: "不認同" },
+                    comments: []
+                };
+
+                filteredData.forEach(d => {
+                    ['q1', 'q2', 'q3', 'q4', 'q5'].forEach(q => {
+                        if(d[q] && stats[q][d[q]] !== undefined) stats[q][d[q]]++;
+                    });
+                    if(d.q6 && d.q6.trim() !== "") stats.comments.push(d.q6);
+                });
+
+                let html = `<div class="row mb-4 animate-up"><div class="col-12"><div class="card text-white text-center p-4 border-0 shadow" style="background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 20px;"><h1 class="m-0 display-3 fw-bold counter-anim" data-target="${totalRespondents}">0</h1><p class="m-0 opacity-75">教師總作答人數</p></div></div></div>`;
+
+                let delayCounter = 1;
+                ['q1', 'q2', 'q3', 'q4', 'q5'].forEach(q => {
+                    const s = stats[q];
+                    const pAgree = totalRespondents ? Math.round((s.agree/totalRespondents)*100) : 0;
+                    const pNeutral = totalRespondents ? Math.round((s.neutral/totalRespondents)*100) : 0;
+                    const pDisagree = totalRespondents ? Math.round((s.disagree/totalRespondents)*100) : 0;
+
+                    html += `<div class="section-card teacher-card animate-up" style="animation-delay: ${delayCounter * 0.1}s"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">${s.label}</h5><div class="d-flex flex-wrap gap-2 mb-2"><div class="stat-detail-badge text-success"><i class="bi bi-emoji-smile-fill"></i> ${s.labelA}: <b>${s.agree}</b> (${pAgree}%)</div><div class="stat-detail-badge text-warning" style="color:#d35400!important"><i class="bi bi-emoji-neutral-fill"></i> ${s.labelN}: <b>${s.neutral}</b> (${pNeutral}%)</div><div class="stat-detail-badge text-danger"><i class="bi bi-emoji-frown-fill"></i> ${s.labelD}: <b>${s.disagree}</b> (${pDisagree}%)</div></div><div class="progress"><div class="progress-bar bg-success" style="width: 0%" data-width="${pAgree}%"></div><div class="progress-bar bg-warning" style="width: 0%" data-width="${pNeutral}%"></div><div class="progress-bar bg-danger" style="width: 0%" data-width="${pDisagree}%"></div></div></div>`;
+                    delayCounter++;
+                });
+
+                delayCounter++;
+                html += `<div class="section-card teacher-card animate-up" style="animation-delay: ${delayCounter * 0.1}s"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">6. 其他</h5>${stats.comments.length > 0 ? `<ul class="list-group list-group-flush">${stats.comments.map(c => `<li class="list-group-item"><i class="bi bi-chat-quote me-2 text-muted"></i>${c}</li>`).join('')}</ul>` : '<p class="text-muted fst-italic">暫無意見。</p>'}</div>`;
+
+                contentDiv.innerHTML = html;
+                requestAnimationFrame(() => { document.querySelectorAll('.counter-anim').forEach(el => animateValue(el, 0, parseInt(el.getAttribute('data-target')), 1000)); document.querySelectorAll('.progress-bar').forEach(el => el.style.width = el.getAttribute('data-width')); });
+            } catch (error) { console.error(error); contentDiv.innerHTML = `<div class="alert alert-danger shadow-sm">讀取失敗。</div>`; }
+        }
+
+        // ================= Student Stats =================
+        async function loadStudentStats() {
+            const contentDiv = document.getElementById('student-stats-content');
+            contentDiv.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div><p class="mt-2 text-muted">正在連線資料庫...</p></div>';
+            try {
+                const querySnapshot = await getDocs(collection(db, STUDENT_COLLECTION));
+                const latestSurveys = {}; 
+                const allClassesSubmitted = new Set();
+                querySnapshot.forEach((doc) => {
+                    const d = doc.data();
+                    const key = `${d.grade}${d.class}`;
+                    const docTime = d.timestamp ? (d.timestamp.seconds * 1000) : 0;
+                    if (!latestSurveys[key] || docTime > latestSurveys[key].docTime) latestSurveys[key] = { ...d, docTime: docTime };
+                });
+                
+                const filteredData = Object.values(latestSurveys);
+                filteredData.forEach(d => allClassesSubmitted.add(`${d.grade}${d.class}`));
+                
+                let totalRespondents = 0;
+                let stats = {
+                    q1: { agree: 0, neutral: 0, disagree: 0, label: "1. 你認同在主題活動中能認識不同國家的文化、地標與風俗。" },
+                    q2: { agree: 0, neutral: 0, disagree: 0, label: "2. 你認同主題活動能提升你的閱讀能力、協作能力及解難能力。" },
+                    q3: { agree: 0, neutral: 0, disagree: 0, label: "3. 英數活動日讓你有機會從閱讀中學習。（例如閱讀Around the World小冊子、書展圖書、活動場地展板及圖書、地下操場的地圖等）" },
+                    q4: { booth: {count:0, label:"攤位遊戲"}, race: {count:0, label:"競技"}, craft: {count:0, label:"手工"}, postcard: {count:0, label:"反思任務(明信片)"}, label: "4. 你最喜歡哪一個活動？" }
+                };
+                
+                filteredData.forEach(d => {
+                    totalRespondents += d.totalCount;
+                    ['q1', 'q2', 'q3'].forEach(q => { 
+                        if(d.data[q]) { 
+                            stats[q].agree += d.data[q].agree||0; 
+                            stats[q].neutral += d.data[q].neutral||0; 
+                            stats[q].disagree += d.data[q].disagree||0; 
+                        }
+                    });
+                    if(d.data.q4) { 
+                        for (const [k, v] of Object.entries(d.data.q4)) { 
+                            if(stats.q4[k]) stats.q4[k].count += v; 
+                        }
+                    }
+                });
+
+                if (totalRespondents === 0) { contentDiv.innerHTML = '<div class="alert alert-info text-center">暫無數據。</div>'; return; }
+
+                let html = `<div class="row mb-4 animate-up"><div class="col-12"><div class="card bg-primary text-white text-center p-4 border-0 shadow" style="background: linear-gradient(135deg, var(--primary-color), #3498db); border-radius: 20px;"><h1 class="m-0 display-3 fw-bold counter-anim" data-target="${totalRespondents}">0</h1><p class="m-0 opacity-75">學生總作答人數</p></div></div></div>`;
+                
+                ['q1', 'q2', 'q3'].forEach(q => {
+                    const s = stats[q]; const base = totalRespondents;
+                    const pa = base ? Math.round((s.agree/base)*100):0; const pn = base ? Math.round((s.neutral/base)*100):0; const pd = base ? Math.round((s.disagree/base)*100):0;
+                    html += `<div class="section-card animate-up"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">${s.label}</h5><div class="d-flex flex-wrap gap-2 mb-2"><div class="stat-detail-badge text-success">認同: <b>${s.agree}/${base}</b> (${pa}%)</div><div class="stat-detail-badge text-warning" style="color:#d35400!important">中立: <b>${s.neutral}/${base}</b> (${pn}%)</div><div class="stat-detail-badge text-danger">不認同: <b>${s.disagree}/${base}</b> (${pd}%)</div></div><div class="progress"><div class="progress-bar bg-success" style="width:0%" data-width="${pa}%"></div><div class="progress-bar bg-warning" style="width:0%" data-width="${pn}%"></div><div class="progress-bar bg-danger" style="width:0%" data-width="${pd}%"></div></div></div>`;
+                });
+
+                let q4Html = `<div class="section-card animate-up"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">${stats.q4.label}</h5>`;
+                for (const [key, obj] of Object.entries(stats.q4)) {
+                    if (key === 'label') continue;
+                    // Q4 的分母都是全校參與人數 (因為沒有限制年級)
+                    let base = totalRespondents;
+                    const pct = base ? Math.round((obj.count/base)*100) : 0;
+                    q4Html += `<div class="mb-3"><div class="d-flex justify-content-between mb-1 align-items-end"><span>${obj.label}</span><span class="small fw-bold text-muted">${obj.count}/${base} 人 (${pct}%)</span></div><div class="progress" style="height: 20px;"><div class="progress-bar" style="width:0%; background-color: var(--secondary-color);" data-width="${pct}%"></div></div></div>`;
+                }
+                html += q4Html + `</div>`;
+
+                let classGridHtml = `<div class="section-card animate-up"><div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom"><h5 class="fw-bold text-dark m-0">班級交卷狀況</h5><span class="badge bg-primary rounded-pill">已收回 ${allClassesSubmitted.size} / 30 班</span></div><div class="class-grid-container">`;
+                for (let g = 1; g <= 6; g++) { ['A', 'B', 'C', 'D', 'E'].forEach(cls => { const isDone = allClassesSubmitted.has(`${g}${cls}`); classGridHtml += `<div class="class-status-badge ${isDone?'done':''}">${g}${cls} ${isDone?'<i class="bi bi-check-lg"></i>':''}</div>`; }); }
+                html += classGridHtml + `</div></div>`;
+                
+                contentDiv.innerHTML = html;
+                requestAnimationFrame(() => { document.querySelectorAll('.counter-anim').forEach(el => animateValue(el, 0, parseInt(el.getAttribute('data-target')), 1000)); document.querySelectorAll('.progress-bar').forEach(el => el.style.width = el.getAttribute('data-width')); });
+            } catch (error) { console.error(error); contentDiv.innerHTML = '<div class="alert alert-danger">讀取失敗。</div>'; }
+        }
+
+        // Utils
+        function animateValue(obj, start, end, duration) { let startTimestamp = null; const step = (timestamp) => { if (!startTimestamp) startTimestamp = timestamp; const progress = Math.min((timestamp - startTimestamp) / duration, 1); obj.innerHTML = Math.floor(progress * (end - start) + start); if (progress < 1) window.requestAnimationFrame(step); }; window.requestAnimationFrame(step); }
+        const triggerConfetti = () => { const canvas = document.getElementById('confetti-canvas'); const ctx = canvas.getContext('2d'); canvas.style.display = 'block'; canvas.width = window.innerWidth; canvas.height = window.innerHeight; const particles = []; for(let i=0; i<150; i++) particles.push({ x: canvas.width/2, y: canvas.height/2, vx: (Math.random()-0.5)*15, vy: (Math.random()-1)*15, color: ['#2980b9','#f39c12','#27ae60'][Math.floor(Math.random()*3)], size: Math.random()*8+4, life: 100 }); const draw = () => { ctx.clearRect(0,0,canvas.width,canvas.height); let active = false; particles.forEach(p => { if(p.life>0) { active=true; p.x+=p.vx; p.y+=p.vy; p.vy+=0.5; p.life--; ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill(); } }); if(active) requestAnimationFrame(draw); else canvas.style.display='none'; }; draw(); };
+    </script>
+</body>
+</html>
