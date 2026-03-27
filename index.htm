@@ -165,10 +165,11 @@
         .animate-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* 班級狀況網格 */
+        /* 班級/教師狀況網格 */
         .class-grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; text-align: center; }
-        .class-status-badge { padding: 10px 5px; border-radius: 8px; font-weight: bold; background-color: #f1f1f1; color: #999; border: 1px solid #ddd; }
+        .class-status-badge { padding: 10px 5px; border-radius: 8px; font-weight: bold; background-color: #f1f1f1; color: #999; border: 1px solid #ddd; transition: all 0.3s;}
         .class-status-badge.done { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .class-status-badge.done-teacher { background-color: var(--teacher-color); color: white; border-color: var(--teacher-color); box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3); }
         
         .stat-detail-badge { font-size: 0.9em; padding: 5px 10px; border-radius: 8px; background: #f8f9fa; border: 1px solid #eee; margin-bottom: 5px; display: inline-block; }
 
@@ -334,8 +335,8 @@
                 <div class="section-card teacher-card animate-up delay-1">
                     <h5 class="section-title" style="color: var(--teacher-color);"><i class="bi bi-person-badge"></i>基本資料</h5>
                     <div class="mb-3">
-                        <label class="form-label">教師編號 (0-99)</label>
-                        <input type="number" class="form-control" id="teacherId" min="0" max="99" placeholder="請輸入編號" required style="max-width: 200px;">
+                        <label class="form-label">教師編號 (1-55)</label>
+                        <input type="number" class="form-control" id="teacherId" min="1" max="55" placeholder="請輸入編號" required style="max-width: 200px;">
                     </div>
                 </div>
 
@@ -401,7 +402,7 @@
 
                 <div class="section-card teacher-card animate-up delay-3">
                     <h5 class="section-title" style="color: var(--teacher-color);">6. 其他意見</h5>
-                    <textarea class="form-control" id="t_q6" rows="4" placeholder="請輸入文字"></textarea>
+                    <textarea class="form-control" id="t_q6" rows="4" placeholder="請輸入文字 (如有)"></textarea>
                 </div>
 
                 <div class="d-grid gap-3 mb-5 animate-up delay-3">
@@ -457,9 +458,19 @@
         const db = getFirestore(app);
         const modal = new bootstrap.Modal(document.getElementById('successModal'));
 
-        // 新活動的 Collection 名稱，避免與舊數據混淆
+        // 新活動的 Collection 名稱
         const STUDENT_COLLECTION = "surveys_student_aw26";
         const TEACHER_COLLECTION = "surveys_teacher_aw26";
+
+        // 教師代號表 (1-55號)
+        const teacherNames = {
+            1:"玲", 2:"蔡", 3:"景", 4:"顧", 5:"浣", 6:"彤", 7:"式", 8:"黎", 9:"鳳", 10:"嘉",
+            11:"潔", 12:"俊", 13:"邦", 14:"馮", 15:"寶", 16:"軒", 17:"勤", 18:"堯", 19:"菁", 20:"曹",
+            21:"俞", 22:"雅", 23:"樂", 24:"婷", 25:"駱", 26:"婉", 27:"洪", 28:"詩", 29:"敏", 30:"心",
+            31:"冼", 32:"雯", 33:"石", 34:"宇", 35:"翠", 36:"晴", 37:"靖", 38:"信", 39:"楚", 40:"彭",
+            41:"采", 42:"湘", 43:"姍", 44:"韻", 45:"暉", 46:"温", 47:"驊", 48:"慧", 49:"陽", 50:"芷",
+            51:"東", 52:"梅", 53:"玉", 54:"潤", 55:"宜"
+        };
 
         // ================= UI Navigation Logic =================
         window.resetView = function() {
@@ -591,6 +602,8 @@
             try {
                 const querySnapshot = await getDocs(collection(db, TEACHER_COLLECTION));
                 const latestSurveys = {}; 
+                const submittedTeachers = new Set();
+
                 querySnapshot.forEach((doc) => {
                     const d = doc.data();
                     const key = d.teacherId;
@@ -603,11 +616,6 @@
                 const filteredData = Object.values(latestSurveys);
                 const totalRespondents = filteredData.length;
 
-                if (totalRespondents === 0) {
-                    contentDiv.innerHTML = '<div class="alert alert-info text-center shadow-sm">目前資料庫中暫無教師數據。</div>';
-                    return;
-                }
-
                 let stats = {
                     q1: { agree: 0, neutral: 0, disagree: 0, label: "1. 學生積極投入今天的活動。", labelA: "同意", labelN: "中立", labelD: "不同意" },
                     q2: { agree: 0, neutral: 0, disagree: 0, label: "2. 學生能應用所學在活動中完成任務。", labelA: "同意", labelN: "中立", labelD: "不同意" },
@@ -618,11 +626,19 @@
                 };
 
                 filteredData.forEach(d => {
+                    const tId = parseInt(d.teacherId, 10);
+                    if (!isNaN(tId)) submittedTeachers.add(tId);
+
                     ['q1', 'q2', 'q3', 'q4', 'q5'].forEach(q => {
                         if(d[q] && stats[q][d[q]] !== undefined) stats[q][d[q]]++;
                     });
                     if(d.q6 && d.q6.trim() !== "") stats.comments.push(d.q6);
                 });
+
+                if (totalRespondents === 0) {
+                    contentDiv.innerHTML = '<div class="alert alert-info text-center shadow-sm">目前資料庫中暫無教師數據。</div>';
+                    return;
+                }
 
                 let html = `<div class="row mb-4 animate-up"><div class="col-12"><div class="card text-white text-center p-4 border-0 shadow" style="background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 20px;"><h1 class="m-0 display-3 fw-bold counter-anim" data-target="${totalRespondents}">0</h1><p class="m-0 opacity-75">教師總作答人數</p></div></div></div>`;
 
@@ -637,8 +653,33 @@
                     delayCounter++;
                 });
 
+                // 教師意見
                 delayCounter++;
-                html += `<div class="section-card teacher-card animate-up" style="animation-delay: ${delayCounter * 0.1}s"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">6. 其他</h5>${stats.comments.length > 0 ? `<ul class="list-group list-group-flush">${stats.comments.map(c => `<li class="list-group-item"><i class="bi bi-chat-quote me-2 text-muted"></i>${c}</li>`).join('')}</ul>` : '<p class="text-muted fst-italic">暫無意見。</p>'}</div>`;
+                html += `<div class="section-card teacher-card animate-up" style="animation-delay: ${delayCounter * 0.1}s"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">6. 其他意見</h5>${stats.comments.length > 0 ? `<ul class="list-group list-group-flush">${stats.comments.map(c => `<li class="list-group-item"><i class="bi bi-chat-quote me-2 text-muted"></i>${c}</li>`).join('')}</ul>` : '<p class="text-muted fst-italic">暫無意見。</p>'}</div>`;
+
+                // 教師提交狀況網格 (使用中文代號)
+                delayCounter++;
+                let submitted1to55Count = 0;
+                for(let i=1; i<=55; i++) { if(submittedTeachers.has(i)) submitted1to55Count++; }
+
+                let teacherGridHtml = `
+                <div class="section-card teacher-card animate-up" style="animation-delay: ${delayCounter * 0.1}s">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <h5 class="fw-bold text-dark m-0"><i class="bi bi-grid-3x3-gap-fill me-2"></i>教師提交狀況</h5>
+                        <span class="badge rounded-pill" style="background-color: var(--teacher-color);">已提交 ${submitted1to55Count} / 55 人</span>
+                    </div>
+                    <div class="class-grid-container" style="grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));">
+                `;
+                
+                for (let i = 1; i <= 55; i++) {
+                    const isDone = submittedTeachers.has(i);
+                    const statusClass = isDone ? 'done-teacher' : '';
+                    const icon = isDone ? '<i class="bi bi-check-lg"></i>' : '';
+                    const name = teacherNames[i] ? teacherNames[i] : `${i}號`;
+                    teacherGridHtml += `<div class="class-status-badge ${statusClass}">${name} ${icon}</div>`;
+                }
+                teacherGridHtml += `</div></div>`;
+                html += teacherGridHtml;
 
                 contentDiv.innerHTML = html;
                 requestAnimationFrame(() => { document.querySelectorAll('.counter-anim').forEach(el => animateValue(el, 0, parseInt(el.getAttribute('data-target')), 1000)); document.querySelectorAll('.progress-bar').forEach(el => el.style.width = el.getAttribute('data-width')); });
@@ -700,7 +741,6 @@
                 let q4Html = `<div class="section-card animate-up"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">${stats.q4.label}</h5>`;
                 for (const [key, obj] of Object.entries(stats.q4)) {
                     if (key === 'label') continue;
-                    // Q4 的分母都是全校參與人數 (因為沒有限制年級)
                     let base = totalRespondents;
                     const pct = base ? Math.round((obj.count/base)*100) : 0;
                     q4Html += `<div class="mb-3"><div class="d-flex justify-content-between mb-1 align-items-end"><span>${obj.label}</span><span class="small fw-bold text-muted">${obj.count}/${base} 人 (${pct}%)</span></div><div class="progress" style="height: 20px;"><div class="progress-bar" style="width:0%; background-color: var(--secondary-color);" data-width="${pct}%"></div></div></div>`;
