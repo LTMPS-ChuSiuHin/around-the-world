@@ -29,14 +29,23 @@
             overflow-x: hidden;
         }
 
+        /* 動態漸變背景 */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         /* 標題區塊 */
         .header-banner {
-            background: linear-gradient(135deg, #1abc9c, #2980b9);
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #1abc9c, #2980b9);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
             position: relative;
             padding: 50px 20px 80px;
             margin-bottom: -40px;
             border-radius: 0 0 50% 50% / 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             overflow: hidden;
             z-index: 1;
         }
@@ -44,7 +53,7 @@
         .header-title {
             font-family: "標楷體", "BiauKai", "KaiTi", "DFKai-SB", serif;
             color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px var(--accent-color);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.4);
             letter-spacing: 2px;
             line-height: 1.3;
         }
@@ -54,6 +63,7 @@
             letter-spacing: 1px;
             color: #f1c40f;
             font-weight: bold;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.3);
         }
 
         /* 內頁專用樣式 */
@@ -86,12 +96,12 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 5px;
+            width: 6px;
             height: 100%;
-            background: linear-gradient(to bottom, var(--primary-color), #3498db);
+            background: linear-gradient(to bottom, #2980b9, #6dd5ed);
         }
 
-        .teacher-card::before { background: linear-gradient(to bottom, var(--teacher-color), #2ecc71); }
+        .teacher-card::before { background: linear-gradient(to bottom, #27ae60, #a9dfbf); }
 
         .section-title {
             color: var(--primary-color);
@@ -115,33 +125,48 @@
             box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.2);
         }
 
+        /* 選單樣式 */
+        .filter-select {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+            background-color: #f0f8ff;
+            cursor: pointer;
+        }
+        .filter-select:focus {
+            box-shadow: 0 0 0 4px rgba(41, 128, 185, 0.2);
+            border-color: var(--primary-color);
+        }
+
         .btn-custom {
             border-radius: 50px;
-            padding: 10px 25px;
+            padding: 12px 25px;
             font-weight: bold;
-            transition: all 0.3s;
             border: none;
-        }
-
-        .btn-primary-custom {
-            background: linear-gradient(45deg, var(--primary-color), #3498db);
-            color: white;
-        }
-        
-        .btn-success-custom {
-            background: linear-gradient(45deg, var(--secondary-color), #e67e22);
-            color: white;
-        }
-
-        .btn-teacher-custom {
-            background: linear-gradient(45deg, var(--teacher-color), #2ecc71);
-            color: white;
+            background-size: 200% auto;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
 
         .btn-custom:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
-            color: white;
+            background-position: right center;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary-custom { background-image: linear-gradient(45deg, #2980b9 0%, #6dd5ed 51%, #2980b9 100%); }
+        .btn-success-custom { background-image: linear-gradient(45deg, #e67e22 0%, #f1c40f 51%, #e67e22 100%); }
+        .btn-teacher-custom { background-image: linear-gradient(45deg, #27ae60 0%, #2ecc71 51%, #27ae60 100%); }
+
+        .stat-main-card-student {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+            box-shadow: 0 10px 25px rgba(42, 82, 152, 0.4) !important;
+        }
+        
+        .stat-main-card-teacher {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+            box-shadow: 0 10px 25px rgba(56, 239, 125, 0.4) !important;
         }
 
         /* 進度條特效 */
@@ -157,27 +182,24 @@
         .progress-bar {
             line-height: 30px;
             font-weight: bold;
-            transition: width 1.5s ease-in-out; 
+            transition: width 1.5s cubic-bezier(0.25, 0.8, 0.25, 1); 
         }
 
-        /* 動畫類別 */
         .hidden { display: none !important; }
         .animate-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* 班級/教師狀況網格 */
+        /* 班級狀況網格 */
         .class-grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; text-align: center; }
         .class-status-badge { padding: 10px 5px; border-radius: 8px; font-weight: bold; background-color: #f1f1f1; color: #999; border: 1px solid #ddd; transition: all 0.3s;}
-        .class-status-badge.done { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
-        .class-status-badge.done-teacher { background-color: var(--teacher-color); color: white; border-color: var(--teacher-color); box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3); }
+        .class-status-badge.done { background-color: var(--primary-color); color: white; border-color: var(--primary-color); box-shadow: 0 2px 8px rgba(41, 128, 185, 0.4);}
+        .class-status-badge.done-teacher { background-color: var(--teacher-color); color: white; border-color: var(--teacher-color); box-shadow: 0 2px 8px rgba(39, 174, 96, 0.4); }
         
         .stat-detail-badge { font-size: 0.9em; padding: 5px 10px; border-radius: 8px; background: #f8f9fa; border: 1px solid #eee; margin-bottom: 5px; display: inline-block; }
 
-        /* 角色選單卡片 */
         .role-card { text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: default; }
         .role-icon { font-size: 3.5rem; margin-bottom: 1rem; color: var(--text-color); }
 
-        /* 自定義 Radio Button 樣式 */
         .custom-radio-group .btn-check:checked + .btn { background-color: #6c757d; color: white; border-color: #6c757d; }
         .teacher-radio .btn-check:checked + .btn { background-color: var(--teacher-color); border-color: var(--teacher-color); }
         .custom-radio-group .btn { border: 1px solid #ced4da; color: #6c757d; }
@@ -195,12 +217,11 @@
         
         <div id="main-menu" class="py-4">
             <div class="row g-4 justify-content-center">
-                
                 <div class="col-md-5 animate-up" style="animation-delay: 0.1s">
                     <div class="section-card role-card">
                         <i class="bi bi-mortarboard-fill role-icon" style="color: var(--primary-color);"></i>
                         <h3 class="fw-bold mb-4">學生問卷</h3>
-                        <div class="d-grid gap-2 w-100">
+                        <div class="d-grid gap-3 w-100">
                             <button class="btn btn-primary-custom btn-custom btn-lg" onclick="showForm('student')">
                                 <i class="bi bi-pencil-square me-2"></i>填寫問卷
                             </button>
@@ -215,7 +236,7 @@
                     <div class="section-card role-card teacher-card">
                         <i class="bi bi-person-workspace role-icon" style="color: var(--teacher-color);"></i>
                         <h3 class="fw-bold mb-4">教師問卷</h3>
-                        <div class="d-grid gap-2 w-100">
+                        <div class="d-grid gap-3 w-100">
                             <button class="btn btn-teacher-custom btn-custom btn-lg" onclick="showForm('teacher')">
                                 <i class="bi bi-pencil-square me-2"></i>填寫問卷
                             </button>
@@ -225,7 +246,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -243,23 +263,17 @@
                             <label class="form-label">級別 (P.1-6)</label>
                             <select class="form-select" id="grade" required>
                                 <option value="" selected disabled>請選擇級別</option>
-                                <option value="1">P.1</option>
-                                <option value="2">P.2</option>
-                                <option value="3">P.3</option>
-                                <option value="4">P.4</option>
-                                <option value="5">P.5</option>
-                                <option value="6">P.6</option>
+                                <option value="1">P.1</option><option value="2">P.2</option>
+                                <option value="3">P.3</option><option value="4">P.4</option>
+                                <option value="5">P.5</option><option value="6">P.6</option>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">班別 (A-E)</label>
                             <select class="form-select" id="class" required>
                                 <option value="" selected disabled>請選擇班別</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
+                                <option value="A">A</option><option value="B">B</option>
+                                <option value="C">C</option><option value="D">D</option><option value="E">E</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -308,7 +322,7 @@
                 </div>
 
                 <div class="d-grid gap-3 mb-5 animate-up delay-3">
-                    <button type="submit" class="btn btn-primary-custom btn-lg shadow-lg">提交學生數據</button>
+                    <button type="submit" class="btn btn-primary-custom btn-custom btn-lg shadow-lg">提交學生數據</button>
                     <button type="button" class="btn btn-light btn-lg text-secondary" onclick="resetView()">取消</button>
                 </div>
             </form>
@@ -319,7 +333,33 @@
                 <h3 class="fw-bold" style="color: var(--primary-color);">學生問卷統計結果</h3>
                 <button class="btn btn-outline-secondary btn-sm rounded-pill" onclick="resetView()">返回</button>
             </div>
-            <div id="student-stats-content"></div>
+            
+            <div class="section-card animate-up mb-4 p-3 d-flex align-items-center bg-light flex-wrap gap-2" style="border-radius: 15px;">
+                <label class="fw-bold text-secondary mb-0"><i class="bi bi-funnel-fill me-1"></i>檢視範圍：</label>
+                <select id="classFilterSelect" class="form-select filter-select w-auto flex-grow-1" onchange="renderStudentStats(this.value)">
+                    <option value="all">全校總計</option>
+                    <optgroup label="跨級別統計">
+                        <option value="group_1_3">低年級 (1-3年級)</option>
+                        <option value="group_4_6">高年級 (4-6年級)</option>
+                        <option value="group_1_2">一至二年級</option>
+                        <option value="group_3_4">三至四年級</option>
+                        <option value="group_5_6">五至六年級</option>
+                    </optgroup>
+                    <optgroup label="級本統計">
+                        <option value="grade_1">一年級 (P.1)</option>
+                        <option value="grade_2">二年級 (P.2)</option>
+                        <option value="grade_3">三年級 (P.3)</option>
+                        <option value="grade_4">四年級 (P.4)</option>
+                        <option value="grade_5">五年級 (P.5)</option>
+                        <option value="grade_6">六年級 (P.6)</option>
+                    </optgroup>
+                    <optgroup label="班本統計" id="dynamicClassOptions">
+                        </optgroup>
+                </select>
+            </div>
+
+            <div id="student-filtered-content"></div>
+            
             <div class="text-center mt-5 mb-5 animate-up"><button class="btn btn-secondary rounded-pill px-4 shadow-sm" onclick="resetView()">返回主選單</button></div>
         </div>
 
@@ -406,7 +446,7 @@
                 </div>
 
                 <div class="d-grid gap-3 mb-5 animate-up delay-3">
-                    <button type="submit" class="btn btn-teacher-custom btn-lg shadow-lg">提交教師問卷</button>
+                    <button type="submit" class="btn btn-teacher-custom btn-custom btn-lg shadow-lg">提交教師問卷</button>
                     <button type="button" class="btn btn-light btn-lg text-secondary" onclick="resetView()">取消</button>
                 </div>
             </form>
@@ -430,7 +470,7 @@
                     <div class="mb-3"><i class="bi bi-check-circle-fill text-success display-1"></i></div>
                     <h3 class="fw-bold text-dark mb-3">上載成功！</h3>
                     <p class="text-muted">數據已安全儲存至資料庫。</p>
-                    <button type="button" class="btn btn-primary-custom rounded-pill px-5 mt-3" data-bs-dismiss="modal" onclick="window.resetView()">好的</button>
+                    <button type="button" class="btn btn-primary-custom btn-custom rounded-pill px-5 mt-3" data-bs-dismiss="modal" onclick="window.resetView()">好的</button>
                 </div>
             </div>
         </div>
@@ -458,11 +498,9 @@
         const db = getFirestore(app);
         const modal = new bootstrap.Modal(document.getElementById('successModal'));
 
-        // 新活動的 Collection 名稱
         const STUDENT_COLLECTION = "surveys_student_aw26";
         const TEACHER_COLLECTION = "surveys_teacher_aw26";
 
-        // 教師代號表 (1-55號)
         const teacherNames = {
             1:"玲", 2:"蔡", 3:"景", 4:"顧", 5:"浣", 6:"彤", 7:"式", 8:"黎", 9:"鳳", 10:"嘉",
             11:"潔", 12:"俊", 13:"邦", 14:"馮", 15:"寶", 16:"軒", 17:"勤", 18:"堯", 19:"菁", 20:"曹",
@@ -471,6 +509,9 @@
             41:"采", 42:"湘", 43:"姍", 44:"韻", 45:"暉", 46:"温", 47:"驊", 48:"慧", 49:"陽", 50:"芷",
             51:"東", 52:"梅", 53:"玉", 54:"潤", 55:"宜"
         };
+
+        window.currentStudentData = [];
+        window.allClassesSubmitted = new Set();
 
         // ================= UI Navigation Logic =================
         window.resetView = function() {
@@ -502,7 +543,6 @@
         }
 
         window.loadStats = function(type) {
-            // 密碼驗證
             const pwd = prompt("請輸入密碼以查看統計結果：");
             if (pwd !== "kit") {
                 alert("密碼錯誤，拒絕存取。");
@@ -515,7 +555,7 @@
 
             document.getElementById(`${type}-stats-view`).classList.remove('hidden');
 
-            if (type === 'student') loadStudentStats();
+            if (type === 'student') fetchStudentStats();
             else if (type === 'teacher') loadTeacherStats();
             
             window.scrollTo(0, 0);
@@ -627,7 +667,8 @@
 
                 filteredData.forEach(d => {
                     const tId = parseInt(d.teacherId, 10);
-                    if (!isNaN(tId)) submittedTeachers.add(tId);
+                    // 限制只計算 1-55 號
+                    if (!isNaN(tId) && tId >= 1 && tId <= 55) submittedTeachers.add(tId);
 
                     ['q1', 'q2', 'q3', 'q4', 'q5'].forEach(q => {
                         if(d[q] && stats[q][d[q]] !== undefined) stats[q][d[q]]++;
@@ -640,7 +681,7 @@
                     return;
                 }
 
-                let html = `<div class="row mb-4 animate-up"><div class="col-12"><div class="card text-white text-center p-4 border-0 shadow" style="background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 20px;"><h1 class="m-0 display-3 fw-bold counter-anim" data-target="${totalRespondents}">0</h1><p class="m-0 opacity-75">教師總作答人數</p></div></div></div>`;
+                let html = `<div class="row mb-4 animate-up"><div class="col-12"><div class="card stat-main-card-teacher text-white text-center p-4 border-0 shadow" style="border-radius: 20px;"><h1 class="m-0 display-3 fw-bold counter-anim" data-target="${totalRespondents}">0</h1><p class="m-0 opacity-75">教師總作答人數</p></div></div></div>`;
 
                 let delayCounter = 1;
                 ['q1', 'q2', 'q3', 'q4', 'q5'].forEach(q => {
@@ -657,25 +698,26 @@
                 delayCounter++;
                 html += `<div class="section-card teacher-card animate-up" style="animation-delay: ${delayCounter * 0.1}s"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">6. 其他意見</h5>${stats.comments.length > 0 ? `<ul class="list-group list-group-flush">${stats.comments.map(c => `<li class="list-group-item"><i class="bi bi-chat-quote me-2 text-muted"></i>${c}</li>`).join('')}</ul>` : '<p class="text-muted fst-italic">暫無意見。</p>'}</div>`;
 
-                // 教師提交狀況網格 (使用中文代號)
+                // 教師提交狀況網格
                 delayCounter++;
-                let submitted1to55Count = 0;
-                for(let i=1; i<=55; i++) { if(submittedTeachers.has(i)) submitted1to55Count++; }
+                let submittedCount = 0;
+                for(let i=1; i<=55; i++) { if(submittedTeachers.has(i)) submittedCount++; }
 
                 let teacherGridHtml = `
                 <div class="section-card teacher-card animate-up" style="animation-delay: ${delayCounter * 0.1}s">
                     <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
                         <h5 class="fw-bold text-dark m-0"><i class="bi bi-grid-3x3-gap-fill me-2"></i>教師提交狀況</h5>
-                        <span class="badge rounded-pill" style="background-color: var(--teacher-color);">已提交 ${submitted1to55Count} / 55 人</span>
+                        <span class="badge rounded-pill" style="background-color: var(--teacher-color);">已提交 ${submittedCount} / 55 人</span>
                     </div>
                     <div class="class-grid-container" style="grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));">
                 `;
                 
                 for (let i = 1; i <= 55; i++) {
+                    if(!teacherNames[i]) continue; 
                     const isDone = submittedTeachers.has(i);
                     const statusClass = isDone ? 'done-teacher' : '';
                     const icon = isDone ? '<i class="bi bi-check-lg"></i>' : '';
-                    const name = teacherNames[i] ? teacherNames[i] : `${i}號`;
+                    const name = teacherNames[i];
                     teacherGridHtml += `<div class="class-status-badge ${statusClass}">${name} ${icon}</div>`;
                 }
                 teacherGridHtml += `</div></div>`;
@@ -686,74 +728,129 @@
             } catch (error) { console.error(error); contentDiv.innerHTML = `<div class="alert alert-danger shadow-sm">讀取失敗。</div>`; }
         }
 
-        // ================= Student Stats =================
-        async function loadStudentStats() {
-            const contentDiv = document.getElementById('student-stats-content');
+        // ================= Student Stats (篩選功能更新) =================
+        async function fetchStudentStats() {
+            const contentDiv = document.getElementById('student-filtered-content');
             contentDiv.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div><p class="mt-2 text-muted">正在連線資料庫...</p></div>';
+            
             try {
                 const querySnapshot = await getDocs(collection(db, STUDENT_COLLECTION));
                 const latestSurveys = {}; 
-                const allClassesSubmitted = new Set();
+                window.allClassesSubmitted.clear();
+
                 querySnapshot.forEach((doc) => {
                     const d = doc.data();
                     const key = `${d.grade}${d.class}`;
                     const docTime = d.timestamp ? (d.timestamp.seconds * 1000) : 0;
-                    if (!latestSurveys[key] || docTime > latestSurveys[key].docTime) latestSurveys[key] = { ...d, docTime: docTime };
-                });
-                
-                const filteredData = Object.values(latestSurveys);
-                filteredData.forEach(d => allClassesSubmitted.add(`${d.grade}${d.class}`));
-                
-                let totalRespondents = 0;
-                let stats = {
-                    q1: { agree: 0, neutral: 0, disagree: 0, label: "1. 你認同在主題活動中能認識不同國家的文化、地標與風俗。" },
-                    q2: { agree: 0, neutral: 0, disagree: 0, label: "2. 你認同主題活動能提升你的閱讀能力、協作能力及解難能力。" },
-                    q3: { agree: 0, neutral: 0, disagree: 0, label: "3. 英數活動日讓你有機會從閱讀中學習。（例如閱讀Around the World小冊子、書展圖書、活動場地展板及圖書、地下操場的地圖等）" },
-                    q4: { booth: {count:0, label:"攤位遊戲"}, race: {count:0, label:"競技"}, craft: {count:0, label:"手工"}, postcard: {count:0, label:"反思任務(明信片)"}, label: "4. 你最喜歡哪一個活動？" }
-                };
-                
-                filteredData.forEach(d => {
-                    totalRespondents += d.totalCount;
-                    ['q1', 'q2', 'q3'].forEach(q => { 
-                        if(d.data[q]) { 
-                            stats[q].agree += d.data[q].agree||0; 
-                            stats[q].neutral += d.data[q].neutral||0; 
-                            stats[q].disagree += d.data[q].disagree||0; 
-                        }
-                    });
-                    if(d.data.q4) { 
-                        for (const [k, v] of Object.entries(d.data.q4)) { 
-                            if(stats.q4[k]) stats.q4[k].count += v; 
-                        }
+                    if (!latestSurveys[key] || docTime > latestSurveys[key].docTime) {
+                        latestSurveys[key] = { ...d, docTime: docTime };
                     }
                 });
-
-                if (totalRespondents === 0) { contentDiv.innerHTML = '<div class="alert alert-info text-center">暫無數據。</div>'; return; }
-
-                let html = `<div class="row mb-4 animate-up"><div class="col-12"><div class="card bg-primary text-white text-center p-4 border-0 shadow" style="background: linear-gradient(135deg, var(--primary-color), #3498db); border-radius: 20px;"><h1 class="m-0 display-3 fw-bold counter-anim" data-target="${totalRespondents}">0</h1><p class="m-0 opacity-75">學生總作答人數</p></div></div></div>`;
                 
-                ['q1', 'q2', 'q3'].forEach(q => {
-                    const s = stats[q]; const base = totalRespondents;
-                    const pa = base ? Math.round((s.agree/base)*100):0; const pn = base ? Math.round((s.neutral/base)*100):0; const pd = base ? Math.round((s.disagree/base)*100):0;
-                    html += `<div class="section-card animate-up"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">${s.label}</h5><div class="d-flex flex-wrap gap-2 mb-2"><div class="stat-detail-badge text-success">認同: <b>${s.agree}/${base}</b> (${pa}%)</div><div class="stat-detail-badge text-warning" style="color:#d35400!important">中立: <b>${s.neutral}/${base}</b> (${pn}%)</div><div class="stat-detail-badge text-danger">不認同: <b>${s.disagree}/${base}</b> (${pd}%)</div></div><div class="progress"><div class="progress-bar bg-success" style="width:0%" data-width="${pa}%"></div><div class="progress-bar bg-warning" style="width:0%" data-width="${pn}%"></div><div class="progress-bar bg-danger" style="width:0%" data-width="${pd}%"></div></div></div>`;
+                window.currentStudentData = Object.values(latestSurveys);
+                window.currentStudentData.forEach(d => window.allClassesSubmitted.add(`${d.grade}${d.class}`));
+                
+                // 動態生成班別選項
+                const classGroup = document.getElementById('dynamicClassOptions');
+                let classOptionsHTML = '';
+                const sortedClasses = Array.from(window.allClassesSubmitted).sort();
+                sortedClasses.forEach(c => {
+                    classOptionsHTML += `<option value="class_${c}">${c}班</option>`;
                 });
+                classGroup.innerHTML = classOptionsHTML;
+                document.getElementById('classFilterSelect').value = 'all';
 
-                let q4Html = `<div class="section-card animate-up"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">${stats.q4.label}</h5>`;
-                for (const [key, obj] of Object.entries(stats.q4)) {
-                    if (key === 'label') continue;
-                    let base = totalRespondents;
-                    const pct = base ? Math.round((obj.count/base)*100) : 0;
-                    q4Html += `<div class="mb-3"><div class="d-flex justify-content-between mb-1 align-items-end"><span>${obj.label}</span><span class="small fw-bold text-muted">${obj.count}/${base} 人 (${pct}%)</span></div><div class="progress" style="height: 20px;"><div class="progress-bar" style="width:0%; background-color: var(--secondary-color);" data-width="${pct}%"></div></div></div>`;
+                renderStudentStats('all');
+            } catch (error) { 
+                contentDiv.innerHTML = '<div class="alert alert-danger">讀取失敗。</div>'; 
+            }
+        }
+
+        window.renderStudentStats = function(filterVal) {
+            const contentDiv = document.getElementById('student-filtered-content');
+            let dataToProcess = window.currentStudentData;
+            let titleText = '學生總作答人數';
+
+            if (filterVal !== 'all') {
+                const selectElement = document.getElementById('classFilterSelect');
+                titleText = selectElement.options[selectElement.selectedIndex].text + ' 作答人數';
+
+                if (filterVal.startsWith('group_')) {
+                    const parts = filterVal.split('_');
+                    const min = parseInt(parts[1]);
+                    const max = parseInt(parts[2]);
+                    dataToProcess = dataToProcess.filter(d => {
+                        const g = parseInt(d.grade);
+                        return g >= min && g <= max;
+                    });
+                } else if (filterVal.startsWith('grade_')) {
+                    const targetGrade = filterVal.split('_')[1];
+                    dataToProcess = dataToProcess.filter(d => d.grade === targetGrade);
+                } else if (filterVal.startsWith('class_')) {
+                    const targetClass = filterVal.split('_')[1];
+                    dataToProcess = dataToProcess.filter(d => `${d.grade}${d.class}` === targetClass);
                 }
-                html += q4Html + `</div>`;
+            }
 
-                let classGridHtml = `<div class="section-card animate-up"><div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom"><h5 class="fw-bold text-dark m-0">班級交卷狀況</h5><span class="badge bg-primary rounded-pill">已收回 ${allClassesSubmitted.size} / 30 班</span></div><div class="class-grid-container">`;
-                for (let g = 1; g <= 6; g++) { ['A', 'B', 'C', 'D', 'E'].forEach(cls => { const isDone = allClassesSubmitted.has(`${g}${cls}`); classGridHtml += `<div class="class-status-badge ${isDone?'done':''}">${g}${cls} ${isDone?'<i class="bi bi-check-lg"></i>':''}</div>`; }); }
+            let totalRespondents = 0;
+            let stats = {
+                q1: { agree: 0, neutral: 0, disagree: 0, label: "1. 你認同在主題活動中能認識不同國家的文化、地標與風俗。" },
+                q2: { agree: 0, neutral: 0, disagree: 0, label: "2. 你認同主題活動能提升你的閱讀能力、協作能力及解難能力。" },
+                q3: { agree: 0, neutral: 0, disagree: 0, label: "3. 英數活動日讓你有機會從閱讀中學習。（例如閱讀Around the World小冊子、書展圖書、活動場地展板及圖書、地下操場的地圖等）" },
+                q4: { booth: {count:0, label:"攤位遊戲"}, race: {count:0, label:"競技"}, craft: {count:0, label:"手工"}, postcard: {count:0, label:"反思任務(明信片)"}, label: "4. 你最喜歡哪一個活動？" }
+            };
+            
+            dataToProcess.forEach(d => {
+                totalRespondents += d.totalCount;
+                ['q1', 'q2', 'q3'].forEach(q => { 
+                    if(d.data[q]) { 
+                        stats[q].agree += d.data[q].agree||0; stats[q].neutral += d.data[q].neutral||0; stats[q].disagree += d.data[q].disagree||0; 
+                    }
+                });
+                if(d.data.q4) { 
+                    for (const [k, v] of Object.entries(d.data.q4)) { if(stats.q4[k]) stats.q4[k].count += v; }
+                }
+            });
+
+            if (totalRespondents === 0) { 
+                contentDiv.innerHTML = '<div class="alert alert-info text-center shadow-sm">該範圍暫無數據。</div>'; 
+                return; 
+            }
+
+            let html = `<div class="row mb-4 animate-up"><div class="col-12"><div class="card stat-main-card-student text-white text-center p-4 border-0 shadow" style="border-radius: 20px;"><h1 class="m-0 display-3 fw-bold counter-anim" data-target="${totalRespondents}">0</h1><p class="m-0 opacity-75">${titleText}</p></div></div></div>`;
+            
+            ['q1', 'q2', 'q3'].forEach(q => {
+                const s = stats[q]; const base = totalRespondents;
+                const pa = base ? Math.round((s.agree/base)*100):0; const pn = base ? Math.round((s.neutral/base)*100):0; const pd = base ? Math.round((s.disagree/base)*100):0;
+                html += `<div class="section-card animate-up"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">${s.label}</h5><div class="d-flex flex-wrap gap-2 mb-2"><div class="stat-detail-badge text-success">認同: <b>${s.agree}/${base}</b> (${pa}%)</div><div class="stat-detail-badge text-warning" style="color:#d35400!important">中立: <b>${s.neutral}/${base}</b> (${pn}%)</div><div class="stat-detail-badge text-danger">不認同: <b>${s.disagree}/${base}</b> (${pd}%)</div></div><div class="progress"><div class="progress-bar bg-success" style="width:0%" data-width="${pa}%"></div><div class="progress-bar bg-warning" style="width:0%" data-width="${pn}%"></div><div class="progress-bar bg-danger" style="width:0%" data-width="${pd}%"></div></div></div>`;
+            });
+
+            let q4Html = `<div class="section-card animate-up"><h5 class="fw-bold text-dark border-bottom pb-3 mb-3">${stats.q4.label}</h5>`;
+            for (const [key, obj] of Object.entries(stats.q4)) {
+                if (key === 'label') continue;
+                let base = totalRespondents;
+                const pct = base ? Math.round((obj.count/base)*100) : 0;
+                q4Html += `<div class="mb-3"><div class="d-flex justify-content-between mb-1 align-items-end"><span>${obj.label}</span><span class="small fw-bold text-muted">${obj.count}/${base} 人 (${pct}%)</span></div><div class="progress" style="height: 20px;"><div class="progress-bar" style="background-image: linear-gradient(45deg, #f39c12, #f1c40f); width:0%;" data-width="${pct}%"></div></div></div>`;
+            }
+            html += q4Html + `</div>`;
+
+            // 班級交卷狀況網格 (僅在「全校總計」時顯示)
+            if (filterVal === 'all') {
+                let classGridHtml = `<div class="section-card animate-up"><div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom"><h5 class="fw-bold text-dark m-0">班級交卷狀況</h5><span class="badge bg-primary rounded-pill" style="background: linear-gradient(45deg, #2980b9, #3498db) !important;">已收回 ${window.allClassesSubmitted.size} / 30 班</span></div><div class="class-grid-container">`;
+                for (let g = 1; g <= 6; g++) { 
+                    ['A', 'B', 'C', 'D', 'E'].forEach(cls => { 
+                        const isDone = window.allClassesSubmitted.has(`${g}${cls}`); 
+                        classGridHtml += `<div class="class-status-badge ${isDone?'done':''}">${g}${cls} ${isDone?'<i class="bi bi-check-lg"></i>':''}</div>`; 
+                    }); 
+                }
                 html += classGridHtml + `</div></div>`;
-                
-                contentDiv.innerHTML = html;
-                requestAnimationFrame(() => { document.querySelectorAll('.counter-anim').forEach(el => animateValue(el, 0, parseInt(el.getAttribute('data-target')), 1000)); document.querySelectorAll('.progress-bar').forEach(el => el.style.width = el.getAttribute('data-width')); });
-            } catch (error) { console.error(error); contentDiv.innerHTML = '<div class="alert alert-danger">讀取失敗。</div>'; }
+            }
+            
+            contentDiv.innerHTML = html;
+            requestAnimationFrame(() => { 
+                document.querySelectorAll('#student-filtered-content .counter-anim').forEach(el => animateValue(el, 0, parseInt(el.getAttribute('data-target')), 800)); 
+                document.querySelectorAll('#student-filtered-content .progress-bar').forEach(el => el.style.width = el.getAttribute('data-width')); 
+            });
         }
 
         // Utils
